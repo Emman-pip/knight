@@ -3,71 +3,88 @@
 
 using namespace std;
 
-class Knight {
+class Board {
 private:
-	vector<vector<int>> board;
-	vector<vector<int>> res;
-	void makeBoard(){
-		for (int i = 0; i < 8; i++){
-			vector<int> newVector;
-			board.push_back(newVector);
-		}
-	}
-	void placeOnBoard(vector<int> arr){
-		board[arr[0]].push_back(arr[1]);
-	}
-	void move(vector<int> current, vector<int> goal, vector<vector<int>> &moves){
-		if (current[0] > 8 || current[0] < 0 || current[1] > 8 || current[0] < 0){
-			return;
-		}
-		bool isCurrentIn, isGoalIn;
-		for (int i ; i < moves.size(); i++){
-			if (current == moves[i]){
-				isCurrentIn = true;
-				break;
-			}
+  vector<vector<int>> moves;
+  void populateMoves() {
+    moves.push_back(vector<int>({2, 1}));
+    moves.push_back(vector<int>({2, -1}));
+    moves.push_back(vector<int>({-2, 1}));
+    moves.push_back(vector<int>({-2, -1}));
+    moves.push_back(vector<int>({1, 2}));
+    moves.push_back(vector<int>({-1, 2}));
+    moves.push_back(vector<int>({1, -2}));
+    moves.push_back(vector<int>({-1, -2}));
+  }
+  vector<vector<int>> possiblePaths(vector<int> path) {
+    vector<vector<int>> res;
+    for (int i = 0; i < moves.size(); i++) {
+      if (path[0] + moves[i][0] > 7 || path[0] + moves[i][0] < 0)
+        continue;
+      if (path[1] + moves[i][1] > 7 || path[1] + moves[i][1] < 0)
+        continue;
+      res.push_back(
+          vector<int>({path[0] + moves[i][0], path[1] + moves[i][1]}));
+    }
+    return res;
+  }
 
-		}
-		if (!isCurrentIn){
-			moves.push_back(current);
-			return;
-		}
+  void recursivePaths(vector<int> current, vector<int> destination,
+                      vector<vector<int>> &q, vector<vector<int>> &visited,
+                      int qPointer) {
+    // code here
+  }
 
-		for (int i ; i < moves.size(); i++){
-			if (goal == moves[i]){
-				res = moves;
-				return;
-			}
-		}
-	}
 public:
-	Knight(vector<int> current, vector<int> toGo){
-		makeBoard();
-		placeOnBoard(current);
-		vector<vector<int>> moves;
-		move(current, toGo, moves);
-	}
-	vector<vector<int>> getBoard(){
-		return board;
-	}
-	vector<vector<int>> getRes(){
-		return res;
-	}
+  Board() { populateMoves(); }
+  vector<vector<int>> getMoves() { return moves; }
+  vector<vector<int>> shortestPath(vector<int> current,
+                                   vector<int> destination) {
+    vector<vector<int>> res;
+    // q and visited is: VALUE, FROM, HEIGHT
+    vector<vector<int>> q;
+    vector<vector<int>> visited;
+    q.push_back(current);
+
+    vector<int> where;
+    bool stop = true;
+    int qPointer = 0;
+    // make a method that will find all the possible paths form a position
+    recursivePaths(current, destination, q, visited, qPointer);
+    // move the pointer and repeatedly do it until the element one is searching
+    // for is found
+    //
+    return res;
+    // return res;;
+  }
 };
 
-int main(){
-	vector<int> current = {0,1};
-	vector<int> toGo = {2,1};
-	Knight *knight =  new Knight(current, toGo);
-	vector<vector<int>> v = knight->getRes();
+int main() {
+  Board *board = new Board();
+  vector<vector<int>> moves = board->getMoves();
+  cout << "CONSTANTS: \n [ ";
+  for (int i = 0; i < moves.size(); i++) {
+    cout << "[";
+    for (int v = 0; v < moves[i].size(); v++) {
+      cout << " " << moves[i][v];
+    }
+    cout << " ]";
+  }
+  cout << " ]" << endl;
+  cout << endl;
 
-	for (vector<int> i : v){
-		cout << "[";
-		for (int q : i){
-			cout << " " << q << " ";
-		}
-		cout << "]" << endl;
-	}
+  vector<vector<int>> path =
+      board->shortestPath(vector<int>({1, 1}), vector<int>({3, 3}));
+  cout << "TRIALS: \n [ ";
+  for (int i = 0; i < path.size(); i++) {
+    cout << "[";
+    for (int v = 0; v < path[i].size(); v++) {
+      cout << " " << path[i][v];
+    }
+    cout << " ]";
+  }
+  cout << " ]" << endl;
+  cout << endl;
 
-	return 0;
+  return 0;
 }
