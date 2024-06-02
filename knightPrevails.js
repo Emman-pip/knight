@@ -105,12 +105,20 @@ const Chess = () => {
     getBoard: () => {
       return board;
     },
-    shortestPath: shortestPath,
+    findShortest: (from, to) => {
+      const res = shortestPath(from, to);
+      console.log(
+        `=> Using a Knight, you made ${res.length - 1} moves from square [${from}] to square [${to}]:`,
+      );
+      for (let i = 0; i < res.length; i++) {
+        console.log(`	[${res[i]}]`);
+      }
+    },
   };
 };
 
 (() => {
   const game = Chess();
   game.init();
-  console.log(game.shortestPath([0, 0], [7, 7]));
+  game.findShortest([0, 0], [2, 7]);
 })();
